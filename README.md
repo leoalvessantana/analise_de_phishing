@@ -1,33 +1,73 @@
-# Análise de Ameaças Phishing Utilizando Machine Learning
+# Robustez de Modelos de Detecção de Phishing com URLs Manipuladas
+
+Este projeto avalia o desempenho e a robustez de modelos de detecção de phishing diante de manipulações leves em URLs, como *typosquatting*, *leetspeak*, inserção de subdomínios, troca de TLDs e inversão de palavras-chave.
+
+## Objetivo
+
+Testar modelos de aprendizado supervisionado e redes neurais convolucionais (CNNs) na detecção de phishing, comparando o desempenho:
+
+- Em URLs legítimas e phishing tradicionais
+- Em URLs de phishing modificadas de forma adversarial
 
 
+## Bases de Dados Utilizadas
 
-Este projeto tem como objetivo principal a análise e detecção de ameaças de phishing utilizando técnicas de Machine Learning. Inicialmente, começamos importando as bibliotecas necessárias para manipulação de dados, visualização e modelagem, como pandas, scikit-learn, seaborn, matplotlib, TensorFlow e outras.
+1. **Web Page Phishing Detection Dataset**  
+   Fonte: [Kaggle](https://www.kaggle.com/datasets/shashwatwork/web-page-phishing-detection-dataset/data)  
+   Arquivo: `datasets/web_page_phishing.csv`
 
-Os dados foram carregados e passaram por um processo cuidadoso de limpeza e tratamento para garantir qualidade, incluindo normalização, identificação e tratamento de variáveis binárias e não binárias, além da análise exploratória para entender as características dos dados e suas correlações com a variável alvo.
+2. **Phishing and Benign Websites Dataset**  
+   Fonte: [Zenodo](https://zenodo.org/records/5807622)  
+   Arquivo: `datasets/phishing_and_benign_websites.csv`
 
-Após a preparação dos dados, aplicamos escalonamento para as variáveis numéricas e mantivemos as variáveis binárias em sua forma original. Também realizamos uma divisão dos dados em conjuntos de treino, validação e teste para garantir uma avaliação justa dos modelos.
+3. **PhiUSIIL Phishing URL Dataset**  
+   Fonte: [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/967/phiusiil+phishing+url+dataset)  
+   Arquivo: `datasets/PhiUSIIL_Phishing_URL_Dataset.csv`
 
-Em seguida, testamos diversos modelos de Machine Learning clássicos, como Regressão Logística, K-Nearest Neighbors, Random Forest, XGBoost, LightGBM e redes neurais multi-layer perceptron, avaliando-os por métricas como acurácia, precisão, recall, F1-score e AUC, usando validação cruzada para garantir robustez.
 
-A partir desses resultados, realizamos a otimização dos hiperparâmetros do melhor modelo, que no caso foi o LightGBM, usando Grid Search e validação cruzada. Após a escolha dos melhores parâmetros, treinamos o modelo final combinando os dados de treino e validação, e avaliamos o desempenho no conjunto de teste, confirmando alta performance na detecção de phishing.
+## Etapas do Projeto
 
-Por fim, implementamos uma rede neural com TensorFlow/Keras, com múltiplas camadas densas e ativação ReLU, monitorando a perda e acurácia em treino e validação com Early Stopping para evitar overfitting. O modelo apresentou resultados consistentes e competitivos, confirmando a eficácia das redes neurais para este tipo de problema.
+### 1. Modelos Clássicos com Features de Engenharia
+- Dataset: [Kaggle](https://www.kaggle.com/datasets/shashwatwork/web-page-phishing-detection-dataset/data)
+- Modelos: Logistic Regression, Random Forest, XGBoost, SVM, KNN, Redes Neurais
+- Avaliação: Accuracy, Precision, Recall, F1-score, Matriz de Confusão, ROC AUC
 
-O código e análises contemplam toda a pipeline, desde a preparação dos dados, análise exploratória, modelagem clássica e deep learning, além de visualizações para interpretar e validar os resultados.
+### 2. CNNs com URLs Brutas
+- Dataset: URLs originais transformadas em sequências de caracteres
+- Processamento: Tokenização por caractere + padding
+- Arquitetura: Embedding → Conv1D → Pooling → Dropout → Dense
 
-Este projeto serve como uma base sólida para desenvolvimento de sistemas de detecção de phishing, podendo ser expandido com mais dados, engenharia de características avançada e técnicas de deep learning mais complexas.
+### 3. Avaliação Adversarial
+- Geração de URLs de phishing modificadas
+- Avaliação da mesma CNN sem re-treinamento
+- Comparação das métricas pré e pós-manipulação
+
+
+## Resultados 
+
+Os resultados mostram que tanto os modelos clássicos quanto as CNNs podem apresentar alto desempenho em cenários tradicionais de detecção de phishing. 
+No entanto, quando expostos a manipulações leves nas URLs, os modelos nem sempre mantêm sua eficácia, revelando vulnerabilidades importantes.
+
+Essa fragilidade evidencia uma limitação crítica nos datasets públicos, que frequentemente não representam cenários adversariais reais, e podem levar 
+a uma falsa sensação de segurança nos sistemas de detecção.
+
+### Recomendamos que futuras abordagens:
+
+- Incorporarem estratégias mais inteligentes de pré-processamento e normalização;
+- Sejam testadas com URLs adversariais geradas sistematicamente;
+- Combinen análise de URLs com outras fontes de informação (conteúdo da página, IPs, DNS, etc.);
+- Explore a criação de modelos mais robustos via adversarial training ou técnicas de data augmentation realistas.
 
 
 
 ## Como Executar
-1. Instale as dependências:
 
+1. Criar ambiente virtual
+- python -m venv venv
+- source venv/bin/activate  # ou venv\Scripts\activate no Windows
+
+2. Instale as dependências:
 - pip install -r requirements.txt
 
-2. Execute o script na ordem:
-
-- Bibliotecas Utilizadas
-- Pré-processamento e divisão dos dados
-- Treinamento dos modelos clássicos e avaliação final
-- Treinamento da rede neural e avaliação final
+3. Rodar o notebook
+- jupyter notebook
